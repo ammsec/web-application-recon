@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passive Recon | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 1 — Passive Recon &amp; OSINT</h2>
+    <p class="page-subtitle">
+      Gather publicly available information about the target without sending
+      any direct traffic to it. This includes IP ranges, ASN data,
+      registration details, and DNS records.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Everything here comes from public sources — search engines, DNS
+        databases, certificate transparency logs — so nothing touches the
+        target directly. It's the safest place to start and often reveals
+        infrastructure you wouldn't find any other way.
+      </p>
+    </div>
+
+    <h3 class="section-heading">Online Tools (No Install Needed)</h3>
+
+    <!-- Censys -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Censys</span>
+        <span class="tool-tag">Online</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> An internet-wide scanner database that
+        indexes every publicly accessible device and server. Returns ports,
+        certificates, and running services for a target.
+      </p>
+      <div class="tool-links">
+        <a href="https://search.censys.io/" target="_blank" rel="noopener">search.censys.io ↗</a>
+      </div>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Search by domain — returns IP ranges, ports, certificates</span>
+"target.com"
+
+<span class="comment"># Search by a specific IP</span>
+ip:1.2.3.4</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- Shodan -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Shodan</span>
+        <span class="tool-tag">Online</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A search engine for exposed services,
+        open ports, and banners across the internet. Useful for identifying
+        what software a target's servers are running.
+      </p>
+      <div class="tool-links">
+        <a href="https://www.shodan.io/" target="_blank" rel="noopener">shodan.io ↗</a>
+      </div>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># All subdomains and open ports for a host</span>
+hostname:"target.com"
+
+<span class="comment"># All IPs owned by a company</span>
+org:"Company Name"
+
+<span class="comment"># Search by SSL certificate</span>
+ssl:"target.com"</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- DNSDumpster -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">DNSDumpster</span>
+        <span class="tool-tag">Online</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Maps a domain's DNS records (A, MX,
+        TXT, NS) and subdomains visually, with export support.
+      </p>
+      <div class="tool-links">
+        <a href="https://dnsdumpster.com/" target="_blank" rel="noopener">dnsdumpster.com ↗</a>
+      </div>
+      <p class="code-label">Usage</p>
+      <p class="tool-desc">Enter the target domain on the site to get a DNS map and record list.</p>
+    </div>
+
+    <!-- Whois -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Whois</span>
+        <span class="tool-tag">CLI + Online</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Shows who registered a domain, when,
+        which registrar, and which nameservers are in use.
+      </p>
+      <div class="tool-links">
+        <a href="https://www.whois.com/" target="_blank" rel="noopener">whois.com ↗</a>
+      </div>
+      <p class="code-label">Terminal</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>whois target.com</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- ViewDNS -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">ViewDNS</span>
+        <span class="tool-tag">Online</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A collection of DNS lookup utilities
+        in one place — reverse IP lookup, propagation checks, and IP
+        history.
+      </p>
+      <div class="tool-links">
+        <a href="https://viewdns.info/" target="_blank" rel="noopener">viewdns.info ↗</a>
+      </div>
+      <p class="code-label">Useful queries</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Reverse IP — how many domains sit on one IP</span>
+Reverse IP Lookup
+
+<span class="comment"># Domain's previous IPs — helps find the origin IP behind a CDN/WAF</span>
+IP History</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="../index.html">← All Phases</a>
+      <a href="subdomain-enumeration.html">Next: Subdomain Enumeration →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

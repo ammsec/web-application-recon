@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Analysis | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 7 — JavaScript &amp; Secrets Analysis</h2>
+    <p class="page-subtitle">
+      Dig through JavaScript files for hidden endpoints and hardcoded
+      secrets — API keys, tokens, internal URLs, and credentials that
+      developers accidentally shipped to production.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Frontend JavaScript ships to every visitor's browser, which means
+        anything hardcoded in it is effectively public — even if it was
+        never meant to be. API keys, internal endpoint paths, and AWS
+        credentials show up here more often than you'd expect.
+      </p>
+    </div>
+
+    <!-- SecretFinder -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">SecretFinder</span>
+        <span class="tool-tag">Python</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Runs regex-based pattern matching
+        against JavaScript files to catch API keys, tokens, and passwords.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/m4ll0k/SecretFinder" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>git clone https://github.com/m4ll0k/SecretFinder.git
+cd SecretFinder
+pip3 install -r requirements.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Scan a single JS file over HTTP</span>
+python3 SecretFinder.py -i https://target.com/app.js -o cli
+
+<span class="comment"># Scan a local file</span>
+python3 SecretFinder.py -i /path/to/file.js -o cli
+
+<span class="comment"># HTML output</span>
+python3 SecretFinder.py -i https://target.com/app.js -o results.html</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- jsluice -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">jsluice</span>
+        <span class="tool-tag">Go · Modern</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Performs static analysis on
+        JavaScript files to extract URLs, endpoints, API keys, and
+        secrets. Considered the modern replacement for SecretFinder.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/BishopFox/jsluice" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install github.com/BishopFox/jsluice/cmd/jsluice@latest</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Extract URLs from a JS file</span>
+jsluice urls target.js
+
+<span class="comment"># Extract secrets (API keys, tokens)</span>
+jsluice secrets target.js
+
+<span class="comment"># JSON output</span>
+jsluice urls target.js | jq .
+
+<span class="comment"># Fetch and analyze directly from a URL</span>
+curl -s https://target.com/app.js | jsluice urls
+curl -s https://target.com/app.js | jsluice secrets
+
+<span class="comment"># Bulk — analyze every JS file from your URL list</span>
+cat cleaned_urls.txt | grep "\.js$" | xargs -I@ curl -s @ | jsluice urls</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="url-discovery.html">← URL Discovery</a>
+      <a href="parameter-discovery.html">Next: Parameter Discovery →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

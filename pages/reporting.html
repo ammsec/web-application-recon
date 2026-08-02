@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reporting | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Reporting</h2>
+    <p class="page-subtitle">
+      A finding nobody can reproduce or understand is a finding that
+      doesn't get fixed. This phase turns everything gathered so far into
+      a report someone else can act on.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Whether it's a bug bounty submission or a client pentest report,
+        the reader is usually not the person who ran the tools. A clear,
+        reproducible write-up is what actually gets a bug triaged, fixed,
+        and paid out — a vague one gets closed as "unable to reproduce."
+      </p>
+    </div>
+
+    <h3 class="section-heading">Report Structure</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">The Essentials</span>
+        <span class="tool-tag">Structure</span>
+      </div>
+      <p class="tool-desc">
+        Every finding, regardless of format, needs these sections at
+        minimum:
+      </p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment">1. Title            — short, specific (e.g. "Stored XSS in profile bio field")
+2. Summary          — one paragraph: what it is and why it matters
+3. Severity         — Critical / High / Medium / Low, with justification
+4. Affected asset   — exact URL, endpoint, or parameter
+5. Steps to reproduce — numbered, exact, no assumed context
+6. Proof of concept — request/response, payload used, screenshot
+7. Impact           — what an attacker can actually do with this
+8. Remediation      — a concrete fix, not just "sanitize input"</span></code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Severity Quick Reference</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Typical Examples</th>
+          <th>Rough Guidance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Critical</td>
+          <td>RCE, full account takeover, database dump, auth bypass</td>
+          <td>No user interaction needed, full compromise of data/system</td>
+        </tr>
+        <tr>
+          <td>High</td>
+          <td>SQLi, stored XSS on sensitive pages, IDOR on private data</td>
+          <td>Significant data exposure or partial compromise</td>
+        </tr>
+        <tr>
+          <td>Medium</td>
+          <td>Reflected XSS, CSRF on non-critical actions, open redirect</td>
+          <td>Limited impact or requires user interaction/social engineering</td>
+        </tr>
+        <tr>
+          <td>Low</td>
+          <td>Missing security headers, verbose error messages, minor info leak</td>
+          <td>Little to no direct impact on its own</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="tool-desc" style="margin-bottom: 2rem;">
+      For a formal, defensible score, run the finding through the
+      <a href="https://www.first.org/cvss/calculator/3.1" target="_blank" rel="noopener" style="color:#38bdf8;">CVSS 3.1 calculator</a>
+      rather than assigning severity by feel — most bug bounty programs
+      expect a CVSS vector alongside the rating.
+    </p>
+
+    <h3 class="section-heading">Markdown Report Template</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">report-template.md</span>
+        <span class="tool-tag">Template</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment">## Title
+[Vulnerability type] in [affected component]
+
+## Severity
+[Critical / High / Medium / Low] — CVSS 3.1: [vector string]
+
+## Summary
+One paragraph describing the issue and why it matters.
+
+## Affected Asset
+- URL: https://target.com/vulnerable-endpoint
+- Parameter: `id`
+
+## Steps to Reproduce
+1. Navigate to ...
+2. Send the following request ...
+3. Observe ...
+
+## Proof of Concept
+​```http
+GET /endpoint?id=' OR '1'='1 HTTP/1.1
+Host: target.com
+​```
+
+## Impact
+What an attacker gains — data accessed, actions performed, scope of compromise.
+
+## Remediation
+Specific, actionable fix (e.g. "Use parameterized queries" not "sanitize input").
+
+## References
+- OWASP link, CWE ID, or relevant docs</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Supporting Evidence</h3>
+    <div class="why-box">
+      <h3>Screenshots and automated output</h3>
+      <p>
+        Reuse what earlier phases already generated — <code>gowitness</code>
+        screenshots from the Alive Hosts phase, and Nuclei's
+        <code>-markdown-export</code> output from the Vulnerability
+        Scanning phase, both drop straight into a report as supporting
+        evidence instead of being recreated by hand.
+      </p>
+    </div>
+
+    <div class="phase-nav">
+      <a href="authentication.html">← Authentication</a>
+      <a href="resources.html">Next: Resources →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

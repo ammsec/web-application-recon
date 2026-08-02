@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URL Discovery | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 6 — URL &amp; Endpoint Discovery</h2>
+    <p class="page-subtitle">
+      Collect every known URL for the target — from live crawling, the
+      Wayback Machine, and other historical sources. This is where hidden
+      endpoints, deprecated APIs, and forgotten admin paths surface.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        A live crawl only shows what's linked right now. Historical
+        sources remember what used to be linked — old API versions,
+        removed admin panels, parameters nobody bothered to clean up.
+        Combining both gives a far bigger picture of the app's real
+        surface than either alone.
+      </p>
+    </div>
+
+    <!-- Katana -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Katana</span>
+        <span class="tool-tag">Go · Modern Standard</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A next-gen web crawler that handles
+        modern web apps — parses JavaScript, supports a headless browser
+        mode, and works against SPAs where older crawlers fail.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/projectdiscovery/katana" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install github.com/projectdiscovery/katana/cmd/katana@latest</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic crawl</span>
+katana -u https://target.com
+
+<span class="comment"># With JavaScript parsing (for JS-heavy apps)</span>
+katana -u https://target.com -jc
+
+<span class="comment"># Headless mode for dynamic sites</span>
+katana -u https://target.com -headless
+
+<span class="comment"># Set crawl depth</span>
+katana -u https://target.com -d 5
+
+<span class="comment"># Save output</span>
+katana -u https://target.com -jc -o crawled_urls.txt
+
+<span class="comment"># Multiple targets</span>
+cat live_hosts.txt | katana -jc -o all_urls.txt
+
+<span class="comment"># Limit scope to the root domain</span>
+katana -u https://target.com -jc -fs rdn</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- gau -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">gau (Get All URLs)</span>
+        <span class="tool-tag">Go · Historical</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Pulls historically crawled URLs
+        from AlienVault OTX, the Wayback Machine, Common Crawl, and
+        URLScan. Nothing touches the target directly.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/lc/gau" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install github.com/lc/gau/v2/cmd/gau@latest</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic usage</span>
+gau target.com
+
+<span class="comment"># Save to file</span>
+gau target.com > gau_urls.txt
+
+<span class="comment"># Filter by extension</span>
+gau target.com --o js,php,aspx
+
+<span class="comment"># Multiple threads</span>
+gau target.com --threads 10
+
+<span class="comment"># Include subdomains</span>
+gau --subs target.com</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- waybackurls -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">waybackurls</span>
+        <span class="tool-tag">Go · Historical</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Pulls every URL archived by the
+        Wayback Machine for a domain — great for finding old endpoints
+        and deprecated APIs that are no longer linked anywhere live.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/tomnomnom/waybackurls" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install github.com/tomnomnom/waybackurls@latest</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic usage</span>
+echo "target.com" | waybackurls
+
+<span class="comment"># Save to file</span>
+echo "target.com" | waybackurls > wayback_urls.txt
+
+<span class="comment"># Sort and deduplicate</span>
+echo "target.com" | waybackurls | sort -u > unique_urls.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- hakrawler -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">hakrawler</span>
+        <span class="tool-tag">Go · Simple &amp; Fast</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A simple, fast crawler that quickly
+        extracts links, forms, and JavaScript file references from a
+        live target.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/hakluke/hakrawler" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install github.com/hakluke/hakrawler@latest</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic crawl</span>
+echo https://target.com | hakrawler
+
+<span class="comment"># Set depth</span>
+echo https://target.com | hakrawler -d 3
+
+<span class="comment"># Include subdomains</span>
+echo https://target.com | hakrawler -subs
+
+<span class="comment"># Plain output</span>
+echo https://target.com | hakrawler -plain</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Combined URL Collection Workflow</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">All sources → one clean list</span>
+        <span class="tool-tag">Workflow</span>
+      </div>
+      <p class="tool-desc">
+        Run all four tools, merge the output, then strip duplicates and
+        static assets that aren't useful for further testing.
+      </p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Collect URLs from every source</span>
+echo "target.com" | waybackurls > all_urls.txt
+gau target.com >> all_urls.txt
+katana -u https://target.com -jc >> all_urls.txt
+
+<span class="comment"># Clean up — dedupe, strip images/css</span>
+cat all_urls.txt | sort -u | grep -ivE "\.(jpg|jpeg|gif|png|css|woff|woff2|svg|pdf|ico|ttf|eot)$" > cleaned_urls.txt
+
+<span class="comment"># Check how many you ended up with</span>
+wc -l cleaned_urls.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="directory-enumeration.html">← Directory Enumeration</a>
+      <a href="javascript-analysis.html">Next: JavaScript Analysis →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

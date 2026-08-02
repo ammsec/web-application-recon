@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cheat Sheet | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Cheat Sheet</h2>
+    <p class="page-subtitle">
+      No explanations, no theory — just the commands. One line per phase
+      for when you already know the tools and just need the syntax fast.
+    </p>
+
+    <h3 class="section-heading">One-Liners by Phase</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Subdomain Enumeration</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>subfinder -d target.com -all -silent -o subdomains.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">DNS Resolution</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>subfinder -d target.com -silent | dnsx -silent -o resolved.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Alive Hosts</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>cat resolved.txt | httpx -title -status-code -tech-detect -o live_hosts.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Port Scan</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>nmap -sC -sV -p 80,443,8080,8443,3000,5000 target.com -oN nmap_results.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Technology Detection</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>whatweb -i live_hosts.txt --log-brief=tech_results.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Directory Enumeration</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>ffuf -u https://target.com/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt -e .php,.html,.txt,.bak -fc 404</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">URL Collection</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>echo target.com | waybackurls > urls.txt; gau target.com >> urls.txt; katana -u https://target.com -jc >> urls.txt; sort -u urls.txt -o cleaned_urls.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">JavaScript Secrets</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>cat cleaned_urls.txt | grep "\.js$" | xargs -I@ curl -s @ | jsluice secrets</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Parameter Discovery</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>arjun -i cleaned_urls.txt -oB</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Vulnerability Scan</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>nuclei -l live_hosts.txt -tags cve,misconfig -severity critical,high -o nuclei_results.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Quick Scan One-Liners</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Subdomains → Live Hosts</span>
+        <span class="tool-tag">Combo</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>subfinder -d target.com -silent | dnsx -silent | httpx -title -status-code -tech-detect</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Live Hosts → Critical/High Vulns</span>
+        <span class="tool-tag">Combo</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>subfinder -d target.com -silent | httpx -silent | nuclei -tags cve -severity critical,high</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Full Automated Pipeline</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">recon.sh</span>
+        <span class="tool-tag">Script</span>
+      </div>
+      <p class="tool-desc"><strong>Usage:</strong> <code>./recon.sh target.com</code></p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment">#!/bin/bash
+# Full Web App Recon Pipeline
+# Usage: ./recon.sh target.com</span>
+
+TARGET=$1
+OUTDIR="recon_$TARGET"
+mkdir -p $OUTDIR
+
+echo "[*] Starting recon on $TARGET"
+
+<span class="comment"># Phase 1: Subdomain Enumeration</span>
+echo "[*] Finding subdomains..."
+subfinder -d $TARGET -all -silent -o $OUTDIR/subdomains.txt
+
+<span class="comment"># Phase 2: DNS Validation</span>
+echo "[*] Resolving subdomains..."
+dnsx -l $OUTDIR/subdomains.txt -silent -o $OUTDIR/resolved.txt
+
+<span class="comment"># Phase 3: HTTP Probing</span>
+echo "[*] Finding live hosts..."
+httpx -l $OUTDIR/resolved.txt -title -status-code -tech-detect -silent -o $OUTDIR/live_hosts.txt
+
+<span class="comment"># Phase 4: URL Collection</span>
+echo "[*] Collecting URLs..."
+gau $TARGET > $OUTDIR/gau_urls.txt
+echo $TARGET | waybackurls >> $OUTDIR/gau_urls.txt
+katana -u https://$TARGET -jc -silent >> $OUTDIR/gau_urls.txt
+cat $OUTDIR/gau_urls.txt | sort -u > $OUTDIR/all_urls.txt
+
+<span class="comment"># Phase 5: Vulnerability Scanning</span>
+echo "[*] Running Nuclei..."
+nuclei -l $OUTDIR/live_hosts.txt -tags cve,misconfig -severity critical,high -o $OUTDIR/nuclei_results.txt
+
+echo "[+] Recon complete! Results in $OUTDIR/"
+ls -la $OUTDIR/</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="resources.html">← Resources</a>
+      <a href="../index.html">Back to Home →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

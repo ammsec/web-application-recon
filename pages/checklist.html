@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vulnerability Scanning | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 9 — Vulnerability Scanning</h2>
+    <p class="page-subtitle">
+      Everything collected so far — live hosts, URLs, parameters — feeds
+      into this final phase. Automated scanning turns that raw data into
+      actual, confirmed vulnerabilities.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Manual testing doesn't scale to hundreds of live hosts and
+        thousands of URLs. Automated scanners catch the common,
+        well-known issues — known CVEs, misconfigurations, and classic
+        injection points — fast, so manual effort can focus on the
+        interesting edge cases these tools miss.
+      </p>
+    </div>
+
+    <!-- Nuclei -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Nuclei</span>
+        <span class="tool-tag">Go · Industry Standard</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Runs community-contributed
+        templates to automatically detect CVEs, misconfigurations, XSS,
+        SQLi, SSRF, and more. The single most-used vulnerability scanner
+        in modern bug bounty work.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/projectdiscovery/nuclei" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+
+<span class="comment"># First run downloads templates</span>
+nuclei -update-templates</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic scan against one target</span>
+nuclei -u https://target.com
+
+<span class="comment"># Update templates regularly</span>
+nuclei -ut
+
+<span class="comment"># Scan a list of live hosts</span>
+nuclei -l live_hosts.txt
+
+<span class="comment"># Scan with specific tags</span>
+nuclei -l live_hosts.txt -tags xss,sqli,ssrf,lfi
+nuclei -l live_hosts.txt -tags cve
+nuclei -l live_hosts.txt -tags misconfig
+
+<span class="comment"># Filter by severity</span>
+nuclei -l live_hosts.txt -severity critical,high
+
+<span class="comment"># Set a rate limit (helps avoid WAF blocks)</span>
+nuclei -l live_hosts.txt -rl 50
+
+<span class="comment"># Save output</span>
+nuclei -l live_hosts.txt -o nuclei_results.txt
+
+<span class="comment"># Generate a Markdown report</span>
+nuclei -u https://target.com -markdown-export ./reports
+
+<span class="comment"># Full pipeline: Subfinder → httpx → Nuclei</span>
+subfinder -d target.com -silent | httpx -silent | nuclei -tags cve,misconfig -o results.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- SQLMap -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">SQLMap</span>
+        <span class="tool-tag">Python · Classic</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Automatically detects and exploits
+        SQL injection vulnerabilities, including full database
+        enumeration and dumping.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/sqlmapproject/sqlmap" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>sudo apt install sqlmap
+
+<span class="comment"># OR from source</span>
+git clone https://github.com/sqlmapproject/sqlmap.git</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic scan against a URL</span>
+sqlmap -u "https://target.com/page?id=1"
+
+<span class="comment"># Test all parameters at higher depth</span>
+sqlmap -u "https://target.com/page?id=1&amp;name=test" --level=3
+
+<span class="comment"># Test a POST request</span>
+sqlmap -u "https://target.com/login" --data="username=test&amp;password=test"
+
+<span class="comment"># Enumerate databases</span>
+sqlmap -u "https://target.com/page?id=1" --dbs
+
+<span class="comment"># Dump a table</span>
+sqlmap -u "https://target.com/page?id=1" -D database_name --tables
+
+<span class="comment"># Use a captured Burp Suite request file</span>
+sqlmap -r request.txt
+
+<span class="comment"># Batch mode — auto-answer prompts</span>
+sqlmap -u "https://target.com/page?id=1" --batch</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- Ghauri -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Ghauri</span>
+        <span class="tool-tag">Python · Modern SQLi</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A modern SQLMap alternative with
+        better WAF bypass techniques and support for testing JSON/XML
+        request bodies.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/r0oth3x49/ghauri" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>pip3 install ghauri
+
+<span class="comment"># OR from source</span>
+git clone https://github.com/r0oth3x49/ghauri.git
+cd ghauri
+pip3 install -r requirements.txt
+python3 setup.py install</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic scan</span>
+ghauri -u "https://target.com/page?id=1"
+
+<span class="comment"># POST data</span>
+ghauri -u "https://target.com/login" --data "user=test&amp;pass=test"
+
+<span class="comment"># Database dump</span>
+ghauri -u "https://target.com/page?id=1" --dbs
+
+<span class="comment"># Use a Burp request file</span>
+ghauri -r request.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- Dalfox -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Dalfox</span>
+        <span class="tool-tag">Go · XSS</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Finds and verifies XSS
+        vulnerabilities in parameters automatically — fast and low on
+        false positives.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/hahwul/dalfox" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install github.com/hahwul/dalfox/v2@latest
+
+<span class="comment"># OR</span>
+sudo apt install dalfox</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Scan a single URL</span>
+dalfox url "https://target.com/search?q=test"
+
+<span class="comment"># Scan URLs from a file</span>
+dalfox file urls.txt
+
+<span class="comment"># Scan from a pipe</span>
+cat urls.txt | dalfox pipe
+
+<span class="comment"># Test a specific parameter only</span>
+dalfox url "https://target.com/search?q=test" --only-custom-payload
+
+<span class="comment"># Save output</span>
+dalfox url "https://target.com" -o xss_results.txt
+
+<span class="comment"># Route through Burp proxy</span>
+dalfox url "https://target.com/search?q=test" --proxy http://127.0.0.1:8080</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="why-box">
+      <h3>Don't forget port-level scanning</h3>
+      <p>
+        These tools focus on web-layer vulnerabilities. For open ports
+        and non-HTTP services, see the
+        <a href="port-scanning.html" style="color:#38bdf8;">Port Scanning</a>
+        page for Nmap usage.
+      </p>
+    </div>
+
+    <div class="phase-nav">
+      <a href="parameter-discovery.html">← Parameter Discovery</a>
+      <a href="reporting.html">Next: Reporting →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authentication | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Authentication</h2>
+    <p class="page-subtitle">
+      Once endpoints and parameters are mapped, look at how the target
+      actually verifies identity — login flows, session tokens, and
+      authorization checks are where some of the highest-impact bugs
+      live.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        A broken auth flow can undermine every other security control on
+        the site. Weak session tokens, a JWT that isn't properly
+        verified, or a password reset flow with a predictable token can
+        turn into full account takeover — often with far less effort
+        than finding an injection bug.
+      </p>
+    </div>
+
+    <h3 class="section-heading">JWT Analysis</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">jwt_tool</span>
+        <span class="tool-tag">Python</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Decodes, tampers with, and attacks
+        JSON Web Tokens — checks for weak signing secrets, the classic
+        <code>alg: none</code> bypass, and key confusion between RS256
+        and HS256.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/ticarpi/jwt_tool" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>git clone https://github.com/ticarpi/jwt_tool.git
+cd jwt_tool
+pip3 install -r requirements.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Decode a token and inspect header/payload</span>
+python3 jwt_tool.py &lt;JWT&gt;
+
+<span class="comment"># Run all known attack modes automatically</span>
+python3 jwt_tool.py &lt;JWT&gt; -M at
+
+<span class="comment"># Try the alg:none bypass</span>
+python3 jwt_tool.py &lt;JWT&gt; -X a
+
+<span class="comment"># Crack a weak HMAC secret with a wordlist</span>
+python3 jwt_tool.py &lt;JWT&gt; -C -d /usr/share/seclists/Passwords/xato-net-10-million-passwords.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Manual JWT Checklist</span>
+        <span class="tool-tag">Checklist</span>
+      </div>
+      <p class="tool-desc">Even without a tool, a few quick manual checks catch common misconfigurations:</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Decode header + payload manually — no signature needed</span>
+echo &lt;base64-header&gt; | base64 -d
+echo &lt;base64-payload&gt; | base64 -d
+
+<span class="comment"># Things to check:
+# - Is "alg" set to "none" accepted by the server?
+# - Does the token expire (exp claim present and enforced)?
+# - Can "kid" or "jku" headers be manipulated to point at an attacker-controlled key?
+# - Is the signature actually verified, or just decoded?</span></code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Session &amp; Cookie Checks</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Cookie Attribute Review</span>
+        <span class="tool-tag">Manual</span>
+      </div>
+      <p class="tool-desc">Inspect session cookies via browser dev tools or a proxy (Burp/ZAP) and confirm the basics are actually set:</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Look for these attributes on session cookies:
+# HttpOnly   - blocks JS access, mitigates session theft via XSS
+# Secure     - cookie only sent over HTTPS
+# SameSite   - Lax/Strict, mitigates CSRF
+#
+# Also worth checking:
+# - Does the session token stay valid after logout?
+# - Is the token predictable (sequential IDs, low entropy, timestamp-based)?
+# - Does changing the password invalidate other active sessions?</span></code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Login Flow &amp; Brute Force Testing</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">ffuf — Credential &amp; Rate-Limit Testing</span>
+        <span class="tool-tag">Go</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> The same fuzzer from the
+        directory phase works well for testing login endpoints — default
+        credentials, username enumeration via response differences, and
+        whether rate limiting actually kicks in.
+      </p>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Test a small list of default/common credentials — never brute force real accounts without authorization</span>
+ffuf -u https://target.com/login -w creds.txt -X POST \
+  -d "username=admin&amp;password=FUZZ" -fc 401
+
+<span class="comment"># Check for username enumeration via response length/timing differences</span>
+ffuf -u https://target.com/login -w usernames.txt -X POST \
+  -d "username=FUZZ&amp;password=wrongpass" -fs 1234</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">OAuth / SSO Misconfigurations</h3>
+    <div class="why-box">
+      <h3>Common things to check</h3>
+      <p>
+        If the target uses OAuth or an SSO provider, check whether the
+        <code>redirect_uri</code> parameter is validated against a strict
+        allowlist (open redirect here can lead to token theft), whether
+        the <code>state</code> parameter is present and unpredictable
+        (missing state enables CSRF on the auth flow), and whether
+        tokens are scoped correctly instead of granting broader access
+        than the requesting app needs.
+      </p>
+    </div>
+
+    <div class="phase-nav">
+      <a href="api-recon.html">← API Recon</a>
+      <a href="reporting.html">Next: Reporting →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

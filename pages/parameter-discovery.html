@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parameter Discovery | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 8 — Parameter Discovery</h2>
+    <p class="page-subtitle">
+      Find hidden or undocumented parameters on discovered endpoints.
+      These are frequently where XSS, SQLi, SSRF, and IDOR vulnerabilities
+      actually live.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Documented parameters get tested by everyone. The ones that
+        don't show up in the UI or the docs — debug flags, legacy fields,
+        internal-only params — are far more likely to be untested and
+        exploitable. Pulling these out opens up entirely new attack
+        vectors on endpoints you already know about.
+      </p>
+    </div>
+
+    <!-- Arjun -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Arjun</span>
+        <span class="tool-tag">Python</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Discovers hidden parameters across
+        GET, POST, JSON, and XML methods against an endpoint. Ships with
+        a built-in wordlist of 25,000+ parameter names.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/s0md3v/Arjun" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>pipx install arjun
+
+<span class="comment"># OR via pip</span>
+pip3 install arjun
+
+<span class="comment"># OR via apt</span>
+sudo apt install arjun</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Find GET parameters</span>
+arjun -u https://target.com/search
+
+<span class="comment"># Find POST parameters</span>
+arjun -u https://target.com/login -m POST
+
+<span class="comment"># JSON body parameters</span>
+arjun -u https://target.com/api -m JSON
+
+<span class="comment"># Custom wordlist</span>
+arjun -u https://target.com -w /path/to/wordlist.txt
+
+<span class="comment"># Multiple URLs from a file</span>
+arjun -i urls.txt
+
+<span class="comment"># Save output</span>
+arjun -u https://target.com -o results.json
+
+<span class="comment"># Export for Burp Suite</span>
+arjun -u https://target.com -oB
+
+<span class="comment"># Add delay to avoid rate limiting</span>
+arjun -u https://target.com --stable</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- ParamSpider -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">ParamSpider</span>
+        <span class="tool-tag">Python · Historical</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Pulls URLs that already contain
+        parameters from the Wayback Machine — a fast way to surface
+        parameter names that have been used historically, with zero
+        active probing.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/devanshbatham/ParamSpider" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>git clone https://github.com/devanshbatham/ParamSpider
+cd ParamSpider
+pip3 install -r requirements.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic usage</span>
+python3 paramspider.py -d target.com
+
+<span class="comment"># Include subdomains</span>
+python3 paramspider.py -d target.com --subs
+
+<span class="comment"># Save to file</span>
+python3 paramspider.py -d target.com -o params.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="javascript-analysis.html">← JavaScript Analysis</a>
+      <a href="checklist.html">Next: Vulnerability Scanning →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

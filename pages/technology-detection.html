@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technology Detection | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 4 — Technology Fingerprinting</h2>
+    <p class="page-subtitle">
+      Identify the frameworks, CMS, server software, and JS libraries a
+      target is running. Knowing the exact stack turns a generic scan into
+      a targeted one.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Once you know what a target is built on, you can go straight to
+        the vulnerabilities that matter. Running WordPress? Look for
+        WordPress-specific bugs and outdated plugins instead of wasting
+        time on generic checks that don't apply.
+      </p>
+    </div>
+
+    <!-- Wappalyzer -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Wappalyzer</span>
+        <span class="tool-tag">Browser Extension · Easiest</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Installs as a browser extension —
+        visit any site and it instantly shows the detected tech stack in
+        the toolbar. No setup, no commands, works passively as you browse.
+      </p>
+      <div class="tool-links">
+        <a href="https://www.wappalyzer.com/" target="_blank" rel="noopener">wappalyzer.com ↗</a>
+      </div>
+      <p class="tool-desc">Install: search "Wappalyzer" in the Chrome or Firefox extension store.</p>
+    </div>
+
+    <!-- WhatWeb -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">WhatWeb</span>
+        <span class="tool-tag">CLI</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Analyzes server headers, HTML, and
+        cookies from the command line to identify the technology stack —
+        useful for scripting against many hosts at once.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/urbanadventurer/whatweb" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>sudo apt install whatweb</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic scan</span>
+whatweb https://target.com
+
+<span class="comment"># Verbose output</span>
+whatweb -v https://target.com
+
+<span class="comment"># Multiple targets from a file</span>
+whatweb -i live_hosts.txt --log-brief=results.txt
+
+<span class="comment"># Aggression level (1-4, higher = more requests)</span>
+whatweb -a 3 https://target.com</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- BuiltWith -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">BuiltWith</span>
+        <span class="tool-tag">Online</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Shows a site's technology stack
+        along with its history — what it used to run on versus what it
+        runs on now. Useful for spotting recent migrations or legacy
+        components still lingering.
+      </p>
+      <div class="tool-links">
+        <a href="https://builtwith.com/" target="_blank" rel="noopener">builtwith.com ↗</a>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="alive-hosts.html">← Alive Hosts</a>
+      <a href="directory-enumeration.html">Next: Directory Enumeration →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subdomain Enumeration | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 2 — Subdomain Enumeration</h2>
+    <p class="page-subtitle">
+      Expand the attack surface beyond the main domain. Dev, staging, api,
+      and admin subdomains often exist outside the primary site — and they're
+      frequently less hardened.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        The more subdomains you find, the bigger the attack surface. This
+        phase runs in two parts: passive discovery pulls known subdomains
+        from third-party sources with zero contact to the target, while
+        active brute forcing checks for ones that aren't publicly indexed
+        anywhere.
+      </p>
+    </div>
+
+    <h3 class="section-heading">Part A — Passive Subdomain Discovery</h3>
+
+    <!-- Subfinder -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Subfinder</span>
+        <span class="tool-tag">Go · Passive</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Pulls subdomains from 50+ passive
+        sources — Shodan, Censys, VirusTotal, SecurityTrails, and more. No
+        request ever reaches the target directly.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/projectdiscovery/subfinder" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
+<span class="comment"># Verify</span>
+subfinder -version</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">API Keys Setup (provider-config.yaml)</p>
+      <p class="tool-desc">File location: <code>~/.config/subfinder/provider-config.yaml</code></p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># First run subfinder once to generate the config file</span>
+subfinder -d example.com
+
+<span class="comment"># Then edit the config file</span>
+nano ~/.config/subfinder/provider-config.yaml</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># ~/.config/subfinder/provider-config.yaml
+# Only fill in the ones you have keys for — leave the rest as []</span>
+bevigil: [YOUR_BEVIGIL_KEY]
+builtwith: [YOUR_BUILTWITH_KEY]
+censys: [API_ID:SECRET]
+certspotter: [YOUR_CERTSPOTTER_KEY]
+chaos: [YOUR_CHAOS_KEY]
+fullhunt: [YOUR_FULLHUNT_KEY]
+github: [YOUR_GITHUB_TOKEN]
+intelx: [2.intelx.io:YOUR_INTELX_KEY]
+redhuntlabs: [https://reconapi.redhuntlabs.com/community/v1/domains/subdomains:YOUR_KEY]
+securitytrails: [YOUR_SECURITYTRAILS_KEY]
+shodan: [YOUR_SHODAN_KEY]
+virustotal: [YOUR_VIRUSTOTAL_KEY]
+whoisxmlapi: [YOUR_WHOISXMLAPI_KEY]
+zoomeyeapi: [YOUR_ZOOMEYE_KEY]
+<span class="comment"># NOTE: BinaryEdge shut down (March 2025), BufferOver is inactive</span></code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic scan</span>
+subfinder -d target.com
+
+<span class="comment"># Save to file</span>
+subfinder -d target.com -o subdomains.txt
+
+<span class="comment"># Use all sources (needs API keys)</span>
+subfinder -d target.com -all -o subdomains.txt
+
+<span class="comment"># Multiple domains</span>
+subfinder -dL domains.txt -o subdomains.txt
+
+<span class="comment"># Silent mode — just the results</span>
+subfinder -d target.com -silent
+
+<span class="comment"># JSON output</span>
+subfinder -d target.com -oJ -o subdomains.json
+
+<span class="comment"># List available sources</span>
+subfinder -ls</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Free API Keys Registration Guide</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Free Limit</th>
+          <th>Sign Up</th>
+          <th>Key Location</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>BeVigil</td><td>25–50 credits/mo</td><td>bevigil.com</td><td>Dashboard → API Keys</td><td>Sign up with email</td></tr>
+        <tr><td>BuiltWith</td><td>Limited</td><td>builtwith.com/signup</td><td>api.builtwith.com</td><td>Don't use tempmail</td></tr>
+        <tr><td>Censys</td><td>250 queries/mo</td><td>search.censys.io</td><td>Account → API</td><td>Format: <code>API_ID:SECRET</code></td></tr>
+        <tr><td>CertSpotter</td><td>Free CT queries</td><td>sslmate.com/signup</td><td>Account → API Keys</td><td>Select "Full Access"</td></tr>
+        <tr><td>Chaos</td><td>Free</td><td>cloud.projectdiscovery.io</td><td>Settings → API Key</td><td>ProjectDiscovery account</td></tr>
+        <tr><td>FullHunt</td><td>100 queries/mo</td><td>fullhunt.io/signup</td><td>User Settings</td><td>—</td></tr>
+        <tr><td>GitHub</td><td>Free (rate limited)</td><td>github.com</td><td>Settings → Dev Settings → PAT</td><td>Select read-only scope</td></tr>
+        <tr><td>Intelx</td><td>Free tier</td><td>intelx.io/signup</td><td>Account → Developer</td><td>Format: <code>2.intelx.io:API_KEY</code></td></tr>
+        <tr><td>RedHunt Labs</td><td>Free community</td><td>devportal.redhuntlabs.com</td><td>API Keys section</td><td>See format in config file</td></tr>
+        <tr><td>SecurityTrails</td><td>50 credits/mo</td><td>securitytrails.com/app/signup</td><td>Account → Credentials</td><td>Use a real/work email</td></tr>
+        <tr><td>Shodan</td><td>Basic free</td><td>account.shodan.io/register</td><td>account.shodan.io</td><td>—</td></tr>
+        <tr><td>VirusTotal</td><td>500 req/day</td><td>virustotal.com/gui/join-us</td><td>Profile → API Key</td><td>—</td></tr>
+        <tr><td>WhoisXMLAPI</td><td>500 queries</td><td>main.whoisxmlapi.com/signup</td><td>Dashboard</td><td>—</td></tr>
+        <tr><td>ZoomEye</td><td>10k credits/mo</td><td>zoomeye.org</td><td>User Profile</td><td>Register &amp; verify email</td></tr>
+        <tr><td>AlienVault OTX</td><td>Unlimited &amp; free</td><td>otx.alienvault.com</td><td>API Settings</td><td>Best free option overall</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="section-heading">Part B — Active Subdomain Discovery (DNS Brute Force)</h3>
+    <p class="page-subtitle">
+      Wordlist-based brute forcing catches subdomains that passive sources
+      miss. This is active — requests do reach the target.
+    </p>
+
+    <!-- dnsx -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">dnsx</span>
+        <span class="tool-tag">Go · Active</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Resolves and validates subdomain
+        lists to confirm which ones actually exist. Also returns CDN and
+        ASN info.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/projectdiscovery/dnsx" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+dnsx -version</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Resolve Subfinder's output</span>
+subfinder -d target.com -silent | dnsx -silent
+
+<span class="comment"># Resolve from a file</span>
+dnsx -l subdomains.txt
+
+<span class="comment"># All DNS records</span>
+dnsx -l subdomains.txt -recon
+
+<span class="comment"># With CDN and ASN info</span>
+dnsx -l subdomains.txt -cdn -asn
+
+<span class="comment"># Custom resolvers (faster)</span>
+dnsx -l subdomains.txt -r 1.1.1.1,8.8.8.8
+
+<span class="comment"># JSON output</span>
+dnsx -l subdomains.txt -json -o dns_results.json
+
+<span class="comment"># Wordlist-based brute force</span>
+dnsx -d target.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- Amass -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Amass</span>
+        <span class="tool-tag">Go · Passive + Active</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Combines passive and active
+        enumeration — certificate transparency, DNS brute force, and API
+        integrations. Slower than Subfinder but more thorough.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/owasp-amass/amass" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install -v github.com/owasp-amass/amass/v4/...@latest
+amass version</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Passive only — safe, no direct contact</span>
+amass enum -passive -d target.com
+
+<span class="comment"># Active + passive</span>
+amass enum -d target.com
+
+<span class="comment"># Save to file</span>
+amass enum -d target.com -o amass_subdomains.txt
+
+<span class="comment"># Intelligence gathering (OSINT)</span>
+amass intel -whois -d target.com</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- Puredns -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Puredns</span>
+        <span class="tool-tag">Go · Active</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Uses Massdns for high-speed DNS
+        brute forcing — can check millions of subdomains in minutes.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/d3mondev/puredns" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Step 1: Install Massdns (dependency)</span>
+git clone https://github.com/blechschmidt/massdns.git
+cd massdns
+make
+sudo make install
+cd ..
+
+<span class="comment"># Step 2: Install Puredns</span>
+go install github.com/d3mondev/puredns/v2@latest
+
+<span class="comment"># Step 3: Set up resolvers</span>
+mkdir -p ~/.config/puredns
+curl -s https://raw.githubusercontent.com/trickest/resolvers/main/resolvers.txt -o ~/.config/puredns/resolvers.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Brute force with a wordlist</span>
+puredns bruteforce /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt target.com
+
+<span class="comment"># Resolve an existing list</span>
+puredns resolve subdomains.txt
+
+<span class="comment"># Save output with custom resolvers</span>
+puredns bruteforce wordlist.txt target.com -r ~/.config/puredns/resolvers.txt -w valid_subdomains.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="passive-recon.html">← Passive Recon</a>
+      <a href="alive-hosts.html">Next: Alive Hosts →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

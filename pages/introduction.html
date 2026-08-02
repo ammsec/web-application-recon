@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Introduction</h2>
+    <p class="page-subtitle">
+      Before touching any tool, it helps to know what "recon" actually
+      means in the context of web application security — and why it's
+      usually the difference between finding something real and finding
+      nothing at all.
+    </p>
+
+    <div class="why-box">
+      <h3>What is web application recon?</h3>
+      <p>
+        Reconnaissance is the information-gathering phase that comes
+        before any actual testing. It's the process of mapping out
+        everything a target exposes — subdomains, live hosts, technology
+        stack, endpoints, parameters — before trying to break any of it.
+        Most real vulnerabilities aren't found by throwing payloads at
+        the first page that loads; they're found on the forgotten
+        staging subdomain, the old API version, or the endpoint nobody
+        remembered to secure. Recon is how those get found in the first
+        place.
+      </p>
+    </div>
+
+    <h3 class="section-heading">Who this guide is for</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Bug bounty hunters</span>
+      </div>
+      <p class="tool-desc">
+        Looking to build a repeatable process for turning a single
+        domain into a full list of tested attack surface.
+      </p>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Pentesters</span>
+      </div>
+      <p class="tool-desc">
+        Needing a structured, phase-by-phase checklist to run at the
+        start of a web application engagement.
+      </p>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Security beginners</span>
+      </div>
+      <p class="tool-desc">
+        Learning how professional recon workflows are actually built,
+        one phase at a time, with real commands instead of just theory.
+      </p>
+    </div>
+
+    <h3 class="section-heading">How this guide is organized</h3>
+    <p class="page-subtitle">
+      The guide follows a strict order — each phase produces the input
+      the next phase needs. Passive recon narrows down what to look at;
+      everything after that gets progressively more active and more
+      targeted, ending in a report someone else can act on.
+    </p>
+
+    <div class="why-box">
+      <h3>A note before you start</h3>
+      <p>
+        Every active technique in this guide sends real traffic to a
+        target. Only ever run these against systems you're explicitly
+        authorized to test — your own infrastructure, an in-scope bug
+        bounty asset, or a signed pentest engagement. See the
+        <a href="active-recon.html" style="color:#38bdf8;">Active Recon</a>
+        page for more on scope and rate limiting before moving past
+        Phase 1.
+      </p>
+    </div>
+
+    <div class="phase-nav">
+      <a href="../index.html">← Home</a>
+      <a href="methodology.html">Next: Methodology →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

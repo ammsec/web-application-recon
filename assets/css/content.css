@@ -1,0 +1,230 @@
+/* ===========================================================
+   content.css
+   Styles for individual phase pages (tool cards, code blocks,
+   badges, tables). Link this AFTER style.css and responsive.css.
+   =========================================================== */
+
+/* ---- Breadcrumb / back link ---- */
+.back-link {
+  display: inline-block;
+  color: #7dd3fc;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.back-link:hover {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
+/* ---- Phase page header ---- */
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: #94a3b8;
+  max-width: 750px;
+  margin-bottom: 1rem;
+}
+
+/* ---- "Why we do this" callout box ---- */
+.why-box {
+  background: #16213a;
+  border-left: 4px solid #38bdf8;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.why-box h3 {
+  color: #7dd3fc;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.why-box p {
+  color: #cbd5e1;
+}
+
+/* ---- Section divider ---- */
+.section-heading {
+  font-size: 1.3rem;
+  color: #e2e8f0;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #334155;
+}
+
+/* ---- Tool card ---- */
+.tool-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tool-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tool-name {
+  font-size: 1.15rem;
+  color: #7dd3fc;
+  font-weight: bold;
+}
+
+.tool-tag {
+  display: inline-block;
+  background: #0f2937;
+  color: #38bdf8;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #164e63;
+}
+
+.tool-desc {
+  color: #cbd5e1;
+  margin-bottom: 0.75rem;
+}
+
+.tool-desc strong {
+  color: #e2e8f0;
+}
+
+.tool-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.tool-links a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+.tool-links a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Code blocks ---- */
+pre.code-block {
+  background: #0b1220;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+pre.code-block code {
+  font-family: "Fira Code", "Consolas", "Monaco", monospace;
+  color: #a5f3fc;
+  white-space: pre;
+}
+
+pre.code-block .comment {
+  color: #64748b;
+}
+
+.code-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin: 0.75rem 0 0.4rem;
+}
+
+/* ---- Copy button ---- */
+.code-wrapper {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  color: #e2e8f0;
+  border-color: #475569;
+}
+
+.copy-btn.copied {
+  color: #4ade80;
+  border-color: #4ade80;
+}
+
+/* ---- Simple data table (API keys, resources) ---- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #334155;
+}
+
+.data-table th {
+  color: #7dd3fc;
+  background: #16213a;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.data-table td {
+  color: #cbd5e1;
+}
+
+.data-table tr:hover td {
+  background: #1a2740;
+}
+
+/* ---- Phase navigation (prev/next) ---- */
+.phase-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 3rem 0 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #334155;
+}
+
+.phase-nav a {
+  color: #7dd3fc;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.phase-nav a:hover {
+  color: #38bdf8;
+}

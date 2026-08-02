@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Methodology | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Methodology</h2>
+    <p class="page-subtitle">
+      This guide follows a phase-based approach — starting with zero footprint
+      on the target and gradually moving toward active, verified interaction.
+      Each phase builds on the output of the one before it.
+    </p>
+
+    <div class="why-box">
+      <h3>The core idea</h3>
+      <p>
+        Recon isn't one tool run once — it's a pipeline. Passive sources feed
+        subdomain enumeration, subdomains get resolved and probed for live
+        hosts, live hosts get fingerprinted and crawled, and everything
+        collected finally gets scanned for real vulnerabilities. Skipping
+        a phase usually means missing attack surface later.
+      </p>
+    </div>
+
+    <h3 class="section-heading">Phase 0 — Prerequisites (First-Time Setup)</h3>
+    <p class="page-subtitle">
+      Most tools in this guide are written in Go, so Go needs to be installed
+      once before anything else works.
+    </p>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Install Go (Linux / Kali)</span>
+        <span class="tool-tag">Setup</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Update packages</span>
+sudo apt update &amp;&amp; sudo apt upgrade -y
+
+<span class="comment"># Install Go</span>
+sudo apt install golang-go -y
+
+<span class="comment"># Verify installation</span>
+go version
+
+<span class="comment"># Add Go bin to PATH (add this line to ~/.bashrc or ~/.zshrc)</span>
+export PATH=$PATH:$(go env GOPATH)/bin
+
+<span class="comment"># Reload shell</span>
+source ~/.bashrc</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Install Common Dependencies</span>
+        <span class="tool-tag">Setup</span>
+      </div>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Python3 and pip (for Python-based tools)</span>
+sudo apt install python3 python3-pip pipx -y
+
+<span class="comment"># Git (for cloning repos)</span>
+sudo apt install git -y
+
+<span class="comment"># curl and wget</span>
+sudo apt install curl wget -y</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">The 9-Phase Pipeline</h3>
+    <p class="page-subtitle">Each phase links to its own page with tools, install steps, and usage commands.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Phase</th>
+          <th>Goal</th>
+          <th>Page</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Passive Recon &amp; OSINT</td>
+          <td>Gather public info without touching the target</td>
+          <td><a href="passive-recon.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Subdomain Enumeration</td>
+          <td>Expand the attack surface beyond the main domain</td>
+          <td><a href="subdomain-enumeration.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Active Probing &amp; Verification</td>
+          <td>Confirm which hosts are actually live</td>
+          <td><a href="alive-hosts.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Technology Fingerprinting</td>
+          <td>Identify frameworks, CMS, and server stack</td>
+          <td><a href="technology-detection.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Content &amp; Directory Discovery</td>
+          <td>Find hidden files, admin panels, backups</td>
+          <td><a href="directory-enumeration.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>URL &amp; Endpoint Discovery</td>
+          <td>Collect historical and crawled URLs</td>
+          <td><a href="url-discovery.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>JavaScript &amp; Secrets Analysis</td>
+          <td>Find hardcoded keys and hidden endpoints</td>
+          <td><a href="javascript-analysis.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Parameter Discovery</td>
+          <td>Find injection points for XSS/SQLi/SSRF</td>
+          <td><a href="parameter-discovery.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Vulnerability Scanning</td>
+          <td>Run automated scans against everything found</td>
+          <td><a href="checklist.html">Open →</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="section-heading">Full Automated Pipeline</h3>
+    <p class="page-subtitle">A single script that chains Phases 1–3 and 6, then runs a vulnerability scan.</p>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">recon.sh</span>
+        <span class="tool-tag">Script</span>
+      </div>
+      <p class="tool-desc"><strong>Usage:</strong> <code>./recon.sh target.com</code></p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment">#!/bin/bash
+# Full Web App Recon Pipeline
+# Usage: ./recon.sh target.com</span>
+
+TARGET=$1
+OUTDIR="recon_$TARGET"
+mkdir -p $OUTDIR
+
+echo "[*] Starting recon on $TARGET"
+
+<span class="comment"># Phase 1: Subdomain Enumeration</span>
+echo "[*] Finding subdomains..."
+subfinder -d $TARGET -all -silent -o $OUTDIR/subdomains.txt
+
+<span class="comment"># Phase 2: DNS Validation</span>
+echo "[*] Resolving subdomains..."
+dnsx -l $OUTDIR/subdomains.txt -silent -o $OUTDIR/resolved.txt
+
+<span class="comment"># Phase 3: HTTP Probing</span>
+echo "[*] Finding live hosts..."
+httpx -l $OUTDIR/resolved.txt -title -status-code -tech-detect -silent -o $OUTDIR/live_hosts.txt
+
+<span class="comment"># Phase 4: URL Collection</span>
+echo "[*] Collecting URLs..."
+gau $TARGET > $OUTDIR/gau_urls.txt
+echo $TARGET | waybackurls >> $OUTDIR/gau_urls.txt
+katana -u https://$TARGET -jc -silent >> $OUTDIR/gau_urls.txt
+cat $OUTDIR/gau_urls.txt | sort -u > $OUTDIR/all_urls.txt
+
+<span class="comment"># Phase 5: Vulnerability Scanning</span>
+echo "[*] Running Nuclei..."
+nuclei -l $OUTDIR/live_hosts.txt -tags cve,misconfig -severity critical,high -o $OUTDIR/nuclei_results.txt
+
+echo "[+] Recon complete! Results in $OUTDIR/"
+ls -la $OUTDIR/</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="../index.html">← All Phases</a>
+      <a href="passive-recon.html">Next: Passive Recon →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

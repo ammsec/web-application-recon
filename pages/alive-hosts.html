@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alive Hosts | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 3 — Active Probing &amp; Verification</h2>
+    <p class="page-subtitle">
+      Confirm which of the subdomains you found are actually alive and
+      serving HTTP/HTTPS. No point spending time on dead hosts — filter
+      down to what's live and focus there.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Subdomain enumeration usually returns hundreds or thousands of
+        names, but many resolve to nothing or are long dead. This phase
+        turns that raw list into a short, verified set of live targets —
+        complete with status codes, page titles, and detected technology —
+        so every phase after this one works with real, reachable hosts.
+      </p>
+    </div>
+
+    <!-- httpx -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">httpx</span>
+        <span class="tool-tag">Go · Industry Standard</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Sends an HTTP request to every host
+        in a subdomain list and verifies which ones are live. Returns
+        status code, page title, detected technology stack, and can
+        capture screenshots.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/projectdiscovery/httpx" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+
+<span class="comment"># Verify</span>
+httpx -version</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic — filter down to live hosts</span>
+cat subdomains.txt | httpx
+
+<span class="comment"># Title, status code, tech detect (best all-round command)</span>
+cat subdomains.txt | httpx -title -status-code -tech-detect
+
+<span class="comment"># Check multiple ports</span>
+cat subdomains.txt | httpx -title -status-code -tech-detect -p 80,443,8080,8443,8888
+
+<span class="comment"># Subfinder piped straight into httpx</span>
+subfinder -d target.com -silent | httpx -title -status-code -tech-detect -o live_hosts.txt
+
+<span class="comment"># Full pipeline: Subfinder → dnsx → httpx</span>
+subfinder -d target.com -silent | dnsx -silent | httpx -title -status-code -tech-detect -o live_hosts.txt
+
+<span class="comment"># Screenshot live hosts (requires gowitness)</span>
+httpx -l subdomains.txt -screenshot
+
+<span class="comment"># JSON output</span>
+httpx -l subdomains.txt -json -o results.json
+
+<span class="comment"># Filter by specific status codes</span>
+httpx -l subdomains.txt -mc 200,301,302,403</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- gowitness -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">gowitness</span>
+        <span class="tool-tag">Go · Visualization</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Takes a screenshot of every live
+        host and builds an HTML report from them, making it much faster
+        to manually review a large host list at a glance.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/sensepost/gowitness" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install github.com/sensepost/gowitness@latest</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Screenshot every host in a file</span>
+gowitness scan file -f live_hosts.txt
+
+<span class="comment"># View the report</span>
+gowitness report serve
+<span class="comment"># Then open: http://localhost:7171</span></code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="subdomain-enumeration.html">← Subdomain Enumeration</a>
+      <a href="technology-detection.html">Next: Technology Detection →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

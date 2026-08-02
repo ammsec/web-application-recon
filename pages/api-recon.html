@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Recon | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">API Recon</h2>
+    <p class="page-subtitle">
+      Modern web apps are mostly APIs behind a frontend. This phase
+      focuses specifically on finding API documentation, undocumented
+      routes, and GraphQL endpoints — surface that generic web recon
+      often walks right past.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        A JSON API doesn't render like a normal page, so directory
+        brute forcers and crawlers frequently miss most of it. Finding
+        the API's actual route map — often sitting in a forgotten
+        Swagger file or exposed via GraphQL introspection — reveals
+        endpoints that were never meant to be public and were never
+        tested.
+      </p>
+    </div>
+
+    <h3 class="section-heading">Finding API Documentation</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Common Doc &amp; Schema Paths</span>
+        <span class="tool-tag">Manual Check</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Developers often leave OpenAPI/
+        Swagger definitions or Postman collections publicly accessible.
+        Check these paths on every live host before anything else.
+      </p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Try these against every live host</span>
+/swagger.json
+/swagger.yaml
+/swagger-ui.html
+/openapi.json
+/api-docs
+/v1/api-docs
+/api/swagger.json
+/.well-known/openapi.json
+/graphql
+/graphiql
+/postman_collection.json
+
+<span class="comment"># Quick batch check with httpx</span>
+cat live_hosts.txt | httpx -path /swagger.json,/openapi.json,/api-docs -mc 200</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- Kiterunner -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Kiterunner</span>
+        <span class="tool-tag">Go · API Route Brute Force</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A content discovery tool built
+        specifically for APIs — brute forces routes using wordlists
+        derived from thousands of real Swagger/OpenAPI specs instead of
+        generic directory wordlists, and understands REST-style path
+        structures.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/assetnote/kiterunner" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>git clone https://github.com/assetnote/kiterunner.git
+cd kiterunner
+make build
+<span class="comment"># Binary ends up at ./dist/kr</span></code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Scan with a routes wordlist (download from Assetnote's wordlist repo)</span>
+kr scan https://target.com -w routes-large.kite
+
+<span class="comment"># Scan a list of hosts</span>
+kr scan -A live_hosts.txt -w routes-large.kite
+
+<span class="comment"># Filter by status codes</span>
+kr scan https://target.com -w routes-large.kite -x 400,401,403,404,500</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">GraphQL Recon</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Introspection Query</span>
+        <span class="tool-tag">Manual</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> If a GraphQL endpoint has
+        introspection enabled (it often is, even in production), a
+        single query dumps its entire schema — every type, query, and
+        mutation the API supports.
+      </p>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Send an introspection query with curl</span>
+curl -s -X POST https://target.com/graphql \
+  -H "Content-Type: application/json" \
+  -d '{"query": "query IntrospectionQuery { __schema { types { name fields { name } } } } "}'</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">graphql-cop</span>
+        <span class="tool-tag">Python</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Automates common GraphQL
+        security checks — introspection exposure, batching attacks,
+        field suggestion leaks, and CSRF issues — against a single
+        endpoint.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/dolevf/graphql-cop" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>git clone https://github.com/dolevf/graphql-cop.git
+cd graphql-cop
+pip3 install -r requirements.txt
+python3 graphql-cop.py -t https://target.com/graphql</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Versioning &amp; Shadow Endpoints</h3>
+    <div class="why-box">
+      <h3>Check every API version, not just the current one</h3>
+      <p>
+        <code>/api/v1/</code>, <code>/api/v2/</code>, <code>/v1/</code>,
+        <code>/internal/</code>, <code>/beta/</code> — old versions are
+        frequently left running with weaker auth or fewer input checks
+        than the current one. Once you've found one API path, always
+        try swapping the version number and re-running discovery against
+        it.
+      </p>
+    </div>
+
+    <div class="phase-nav">
+      <a href="checklist.html">← Vulnerability Scanning</a>
+      <a href="authentication.html">Next: Authentication →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

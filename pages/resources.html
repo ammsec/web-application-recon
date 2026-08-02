@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Essential Wordlists &amp; Resources</h2>
+    <p class="page-subtitle">
+      The tools throughout this guide are only as good as the wordlists
+      and payloads behind them. This page collects the ones referenced
+      across every phase, plus a few extra reading resources.
+    </p>
+
+    <!-- SecLists -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">SecLists</span>
+        <span class="tool-tag">The Essential Collection</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What's in it:</strong> Usernames, passwords, URLs,
+        directories, subdomains, and fuzzing payloads — every wordlist
+        type used across this guide lives here in one repo.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/danielmiessler/SecLists" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>sudo apt install seclists
+
+<span class="comment"># OR manually</span>
+git clone https://github.com/danielmiessler/SecLists.git /usr/share/seclists</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Useful paths</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt   <span class="comment"># Directory brute force</span>
+/usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt           <span class="comment"># Better directory list</span>
+/usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt        <span class="comment"># Subdomain brute force</span>
+/usr/share/seclists/Fuzzing/                                              <span class="comment"># XSS, SQLi payloads</span></code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- PayloadBox -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">PayloadBox</span>
+        <span class="tool-tag">Payload Collection</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it is:</strong> A collection of organization-wide
+        payload repos — XSS, SQLi, SSRF, command injection, and more —
+        each maintained as its own focused GitHub repo.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/payloadbox" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+
+    <h3 class="section-heading">Further Reading</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Web Recon Guide</span>
+        <span class="tool-tag">Article</span>
+      </div>
+      <p class="tool-desc">A detailed walkthrough of a practical recon methodology.</p>
+      <div class="tool-links">
+        <a href="https://dhiyaneshgeek.github.io/bug/bounty/2020/02/06/recon-with-me/" target="_blank" rel="noopener">Read ↗</a>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Recon Methodology</span>
+        <span class="tool-tag">Repo</span>
+      </div>
+      <p class="tool-desc">A community-maintained reference for web recon methodology and tooling.</p>
+      <div class="tool-links">
+        <a href="https://github.com/pr0xh4ck/web-recon" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="reporting.html">← Reporting</a>
+      <a href="cheat-sheet.html">Next: Cheat Sheet →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

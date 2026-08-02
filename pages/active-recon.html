@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Active Recon | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Active Recon</h2>
+    <p class="page-subtitle">
+      Once passive sources are exhausted, active recon starts — every
+      technique here sends real traffic directly to the target. This page
+      is the hub for every phase that touches the target, from here on.
+    </p>
+
+    <div class="why-box">
+      <h3>Active vs. Passive — what's the actual difference?</h3>
+      <p>
+        Passive recon (Phase 1) pulls information from third parties —
+        Shodan, Censys, DNS databases — without the target ever seeing a
+        single request from you. Active recon flips that: DNS brute
+        forcing, HTTP probing, directory fuzzing, and vulnerability
+        scanning all generate real requests the target's logs will see.
+        Neither approach replaces the other — passive recon narrows the
+        list, active recon verifies and digs into it.
+      </p>
+    </div>
+
+    <h3 class="section-heading">Before You Start Sending Traffic</h3>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Scope &amp; Authorization</span>
+        <span class="tool-tag">Read First</span>
+      </div>
+      <p class="tool-desc">
+        Only run active techniques against targets you're explicitly
+        authorized to test — your own infrastructure, a bug bounty
+        program's in-scope assets, or a client engagement with signed
+        authorization. Sending scans to anything else is illegal in most
+        jurisdictions, regardless of intent.
+      </p>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Rate Limiting</span>
+        <span class="tool-tag">Best Practice</span>
+      </div>
+      <p class="tool-desc">
+        Most tools in the active phases support a rate-limit flag
+        (<code>-rl</code>, <code>-t</code>, <code>--stable</code>, etc.).
+        Aggressive, unthrottled scanning can trip WAFs, get your IP
+        blocked, or in the worst case degrade the target's service —
+        which turns a recon exercise into a real incident. Start
+        conservative and scale up only if the program's scope explicitly
+        allows it.
+      </p>
+    </div>
+
+    <h3 class="section-heading">Active-Touch Phases</h3>
+    <p class="page-subtitle">Everything from here on generates real traffic to the target.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>What it does</th>
+          <th>Page</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DNS Brute Force</td>
+          <td>Wordlist-based subdomain discovery (dnsx, Amass, Puredns)</td>
+          <td><a href="subdomain-enumeration.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>DNS Enumeration</td>
+          <td>Full DNS record resolution and validation</td>
+          <td><a href="dns-enumeration.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>Alive Hosts</td>
+          <td>HTTP probing to confirm live hosts (httpx, gowitness)</td>
+          <td><a href="alive-hosts.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>Port Scanning</td>
+          <td>Open ports and service detection (Nmap)</td>
+          <td><a href="port-scanning.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>Technology Detection</td>
+          <td>Fingerprinting the live stack (WhatWeb, Wappalyzer)</td>
+          <td><a href="technology-detection.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>Directory Enumeration</td>
+          <td>Brute-forcing hidden files and paths (ffuf, feroxbuster, dirsearch)</td>
+          <td><a href="directory-enumeration.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>URL Discovery</td>
+          <td>Live crawling for endpoints (Katana, hakrawler)</td>
+          <td><a href="url-discovery.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>Parameter Discovery</td>
+          <td>Finding hidden injection points (Arjun)</td>
+          <td><a href="parameter-discovery.html">Open →</a></td>
+        </tr>
+        <tr>
+          <td>Vulnerability Scanning</td>
+          <td>Automated bug hunting (Nuclei, SQLMap, Dalfox)</td>
+          <td><a href="checklist.html">Open →</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="phase-nav">
+      <a href="passive-recon.html">← Passive Recon</a>
+      <a href="subdomain-enumeration.html">Next: Subdomain Enumeration →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

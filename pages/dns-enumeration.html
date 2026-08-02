@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DNS Enumeration | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">DNS Enumeration</h2>
+    <p class="page-subtitle">
+      Go beyond just finding subdomains — pull full DNS record sets, check
+      for zone transfer misconfigurations, and flag subdomains pointing
+      at services that could be taken over.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        A domain's DNS records reveal more than just hostnames — mail
+        servers (MX), SPF/DKIM policies (TXT), nameservers (NS), and CNAME
+        chains that sometimes point at a decommissioned third-party
+        service. That last one is how subdomain takeovers happen, and
+        it's one of the easiest high-impact bugs to find once you know
+        what to look for.
+      </p>
+    </div>
+
+    <!-- dnsx full recon -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">dnsx — Full Record Enumeration</span>
+        <span class="tool-tag">Go</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Beyond basic resolution, dnsx can
+        pull every DNS record type for a host list in one pass — A, AAAA,
+        CNAME, MX, TXT, NS — plus CDN and ASN metadata.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/projectdiscovery/dnsx" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Full record recon on a resolved list</span>
+dnsx -l subdomains.txt -recon
+
+<span class="comment"># Specific record types</span>
+dnsx -l subdomains.txt -a -aaaa -cname -mx -txt -ns
+
+<span class="comment"># CDN and ASN info (useful for spotting WAF/CDN-fronted hosts)</span>
+dnsx -l subdomains.txt -cdn -asn
+
+<span class="comment"># Save everything as JSON for later parsing</span>
+dnsx -l subdomains.txt -recon -json -o dns_full.json</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- dig / host -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">dig &amp; host</span>
+        <span class="tool-tag">CLI · Built-in</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Standard Linux DNS lookup utilities
+        — no install needed. Good for spot-checking a single record or
+        testing a zone transfer manually.
+      </p>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Look up all common record types</span>
+dig target.com ANY
+
+<span class="comment"># MX records</span>
+dig target.com MX
+
+<span class="comment"># TXT records (SPF, DKIM, verification tokens)</span>
+dig target.com TXT
+
+<span class="comment"># Attempt a zone transfer (misconfigured servers allow this)</span>
+dig axfr target.com @ns1.target.com
+
+<span class="comment"># Quick lookup with host</span>
+host -t txt target.com</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- Subdomain takeover -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Subdomain Takeover Check</span>
+        <span class="tool-tag">nuclei</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A subdomain with a CNAME pointing
+        to an unclaimed third-party service (S3 bucket, Heroku app,
+        GitHub Pages, etc.) can often be claimed by anyone — Nuclei ships
+        dedicated templates to flag these automatically.
+      </p>
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Run takeover-specific templates against resolved subdomains</span>
+nuclei -l subdomains.txt -tags takeover
+
+<span class="comment"># Combine with dnsx to only check CNAMEs pointing off-domain first</span>
+dnsx -l subdomains.txt -cname -resp-only | nuclei -tags takeover</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="subdomain-enumeration.html">← Subdomain Enumeration</a>
+      <a href="alive-hosts.html">Next: Alive Hosts →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

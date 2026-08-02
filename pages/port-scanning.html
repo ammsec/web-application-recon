@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Port Scanning | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Port Scanning</h2>
+    <p class="page-subtitle">
+      Look past the web server. Open ports, running services, and
+      exposed non-HTTP protocols often reveal a bigger attack surface
+      than the website itself.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Recon so far has focused entirely on HTTP/HTTPS. But a host can
+        also expose SSH, FTP, databases, admin consoles, or internal
+        services on non-standard ports — often with weaker security than
+        the public-facing site. A port scan is how you find those before
+        moving into deeper testing.
+      </p>
+    </div>
+
+    <!-- Nmap -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Nmap</span>
+        <span class="tool-tag">C · Industry Standard</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> The standard network scanner —
+        finds open ports, identifies running services and their
+        versions, detects the OS, and can run vulnerability-detection
+        scripts against what it finds.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/nmap/nmap" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>sudo apt install nmap</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic port scan</span>
+nmap target.com
+
+<span class="comment"># Common web ports</span>
+nmap -p 80,443,8080,8443,8888,3000,5000 target.com
+
+<span class="comment"># Full port scan — all 65,535 ports</span>
+nmap -p- target.com
+
+<span class="comment"># Service version detection</span>
+nmap -sV target.com
+
+<span class="comment"># OS detection</span>
+nmap -O target.com
+
+<span class="comment"># Script scan — includes vulnerability detection</span>
+nmap -sC -sV target.com
+
+<span class="comment"># Fast scan (top 100 ports only)</span>
+nmap -F target.com
+
+<span class="comment"># Save output</span>
+nmap -sC -sV target.com -oN nmap_results.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="why-box">
+      <h3>A note on scan intensity</h3>
+      <p>
+        A full <code>-p-</code> scan against a whole subdomain list can
+        take a very long time and generates a lot of traffic. Reserve it
+        for a small set of high-value targets, and use the common-ports
+        or fast-scan modes when scanning a large host list.
+      </p>
+    </div>
+
+    <div class="phase-nav">
+      <a href="alive-hosts.html">← Alive Hosts</a>
+      <a href="technology-detection.html">Next: Technology Detection →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

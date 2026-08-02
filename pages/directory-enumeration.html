@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directory Enumeration | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Phase 5 — Content &amp; Directory Discovery</h2>
+    <p class="page-subtitle">
+      Find hidden files that were never meant to be public — admin panels,
+      backup files, config files, and forgotten API endpoints.
+    </p>
+
+    <div class="why-box">
+      <h3>Why this phase matters</h3>
+      <p>
+        Developers regularly leave things exposed by accident — a
+        <code>.bak</code> or <code>.old</code> file, a leftover config, an
+        admin panel with no auth in front of it. Brute forcing common
+        paths with a wordlist is one of the highest-value, lowest-effort
+        techniques in the entire recon process.
+      </p>
+    </div>
+
+    <!-- ffuf -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">ffuf</span>
+        <span class="tool-tag">Go · Industry Standard</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A fast web fuzzer written in Go —
+        fuzzes directories, files, parameters, and headers, all with the
+        same tool.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/ffuf/ffuf" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>go install github.com/ffuf/ffuf/v2@latest
+
+<span class="comment"># OR</span>
+sudo apt install ffuf</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic directory brute force</span>
+ffuf -u https://target.com/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
+
+<span class="comment"># With extensions</span>
+ffuf -u https://target.com/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt -e .php,.html,.txt,.bak,.js
+
+<span class="comment"># Filter out 404s</span>
+ffuf -u https://target.com/FUZZ -w wordlist.txt -fc 404
+
+<span class="comment"># Filter by response size</span>
+ffuf -u https://target.com/FUZZ -w wordlist.txt -fs 1234
+
+<span class="comment"># Fuzz a POST request</span>
+ffuf -u https://target.com/login -w wordlist.txt -X POST -d "username=FUZZ&amp;password=test"
+
+<span class="comment"># Fuzz subdomains</span>
+ffuf -u https://FUZZ.target.com -w subdomains.txt -H "Host: FUZZ.target.com"
+
+<span class="comment"># Save output as JSON</span>
+ffuf -u https://target.com/FUZZ -w wordlist.txt -o results.json -of json
+
+<span class="comment"># Route through Burp Suite</span>
+ffuf -u https://target.com/FUZZ -w wordlist.txt -x http://127.0.0.1:8080</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- Feroxbuster -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">Feroxbuster</span>
+        <span class="tool-tag">Rust · Recursive</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> Written in Rust, so it's even
+        faster than ffuf. Recursively scans discovered directories
+        automatically. Very popular in bug bounty workflows.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/epi052/feroxbuster" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>sudo apt install feroxbuster
+
+<span class="comment"># OR via cargo (Rust package manager)</span>
+cargo install feroxbuster</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic scan</span>
+feroxbuster -u https://target.com
+
+<span class="comment"># Custom wordlist</span>
+feroxbuster -u https://target.com -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt
+
+<span class="comment"># With extensions</span>
+feroxbuster -u https://target.com -x php,html,txt,bak,js -w wordlist.txt
+
+<span class="comment"># Set thread count</span>
+feroxbuster -u https://target.com -t 50 -w wordlist.txt
+
+<span class="comment"># Filter by status codes</span>
+feroxbuster -u https://target.com -s 200,301,302 -w wordlist.txt
+
+<span class="comment"># Route through Burp Suite proxy</span>
+feroxbuster -u https://target.com --proxy http://127.0.0.1:8080 --insecure
+
+<span class="comment"># Save output</span>
+feroxbuster -u https://target.com -o results.txt
+
+<span class="comment"># Multiple targets from stdin</span>
+cat live_hosts.txt | feroxbuster --stdin</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <!-- dirsearch -->
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <span class="tool-name">dirsearch</span>
+        <span class="tool-tag">Python · Beginner Friendly</span>
+      </div>
+      <p class="tool-desc">
+        <strong>What it does:</strong> A Python-based directory scanner
+        with a built-in wordlist and simple syntax — a solid starting
+        point if ffuf and feroxbuster feel like too much at once.
+      </p>
+      <div class="tool-links">
+        <a href="https://github.com/maurosoria/dirsearch" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <p class="code-label">Installation</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code>pip3 install dirsearch
+
+<span class="comment"># OR</span>
+sudo apt install dirsearch</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+
+      <p class="code-label">Usage</p>
+      <div class="code-wrapper">
+        <pre class="code-block"><code><span class="comment"># Basic scan</span>
+dirsearch -u https://target.com
+
+<span class="comment"># Custom wordlist</span>
+dirsearch -u https://target.com -w /path/to/wordlist.txt
+
+<span class="comment"># Set extensions</span>
+dirsearch -u https://target.com -e php,html,txt,bak
+
+<span class="comment"># Multiple targets</span>
+dirsearch -l live_hosts.txt
+
+<span class="comment"># Save output</span>
+dirsearch -u https://target.com -o results.txt</code></pre>
+        <button class="copy-btn">Copy</button>
+      </div>
+    </div>
+
+    <div class="phase-nav">
+      <a href="technology-detection.html">← Technology Detection</a>
+      <a href="url-discovery.html">Next: URL Discovery →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>
