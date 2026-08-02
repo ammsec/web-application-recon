@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recon Pipeline</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <style>
+    .phase-card {
+      margin-bottom: 1.5rem;
+    }
+
+    .phase-card h4 {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      color: #f8fafc;
+    }
+
+    .phase-card ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .phase-card pre {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: #e2e8f0;
+      margin-bottom: 1rem;
+    }
+
+    .phase-card code {
+      font-family: Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Recon for Web Application</h1>
+      <p>Web Application Recon Checklist</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h2>Recon Pipeline</h2>
+      <p>
+        This page explains the full recon workflow step by step.
+        Each phase includes an overview, tools, example commands, output, and tips.
+      </p>
+
+      <section class="phase-card">
+        <h3>Phase 1 — Passive Recon & OSINT</h3>
+        <p>
+          Collect publicly available information before interacting with the target.
+          This helps identify domains, technologies, employees, certificates, and historical URLs.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>theHarvester</li>
+          <li>crt.sh</li>
+          <li>Amass</li>
+          <li>Subfinder</li>
+          <li>Waybackurls</li>
+          <li>GAU</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>subfinder -d example.com | httpx -silent</code></pre>
+
+        <h4>Output</h4>
+        <p>Subdomains, certificate data, public DNS records, and archived URLs.</p>
+
+        <h4>Tips</h4>
+        <p>Start passive first so you do not send unnecessary traffic to the target.</p>
+      </section>
+
+      <section class="phase-card">
+        <h3>Phase 2 — Subdomain Enumeration</h3>
+        <p>
+          Find all subdomains related to the target domain. Subdomains often expose staging,
+          admin, API, and testing environments.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>Subfinder</li>
+          <li>Amass</li>
+          <li>Assetfinder</li>
+          <li>Chaos</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>subfinder -d example.com -silent | dnsx -silent</code></pre>
+
+        <h4>Output</h4>
+        <p>A list of discovered subdomains.</p>
+
+        <h4>Tips</h4>
+        <p>Use multiple passive sources and merge results to get better coverage.</p>
+      </section>
+
+      <section class="phase-card">
+        <h3>Phase 3 — Active Probing & Verification</h3>
+        <p>
+          Check which discovered hosts are actually alive. This removes dead entries and helps
+          you focus on real web services.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>httpx</li>
+          <li>gowitness</li>
+          <li>nmap</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>cat subdomains.txt | httpx -title -status-code -tech-detect</code></pre>
+
+        <h4>Output</h4>
+        <p>Live hosts, HTTP status codes, page titles, technologies, and screenshots.</p>
+
+        <h4>Tips</h4>
+        <p>Focus only on live hosts so later steps stay faster and cleaner.</p>
+      </section>
+
+      <section class="phase-card">
+        <h3>Phase 4 — Technology Fingerprinting</h3>
+        <p>
+          Identify the technologies used by the target, such as CMS, framework, web server,
+          JavaScript libraries, and backend platforms.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>WhatWeb</li>
+          <li>Wappalyzer</li>
+          <li>BuiltWith</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>whatweb https://example.com</code></pre>
+
+        <h4>Output</h4>
+        <p>Technology stack details such as server type, framework, and plugins.</p>
+
+        <h4>Tips</h4>
+        <p>Technology data helps you guess likely weak points and known CVEs.</p>
+      </section>
+
+      <section class="phase-card">
+        <h3>Phase 5 — Content & Directory Discovery</h3>
+        <p>
+          Discover hidden files, folders, and panels that are not directly linked from the UI.
+          These often include backups, admin pages, and forgotten endpoints.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>ffuf</li>
+          <li>feroxbuster</li>
+          <li>dirsearch</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>ffuf -u https://example.com/FUZZ -w wordlist.txt -fc 404</code></pre>
+
+        <h4>Output</h4>
+        <p>Directories, files, hidden panels, and backup content.</p>
+
+        <h4>Tips</h4>
+        <p>Use extensions like .php, .txt, .bak, and .js for better results.</p>
+      </section>
+
+      <section class="phase-card">
+        <h3>Phase 6 — URL & Endpoint Discovery</h3>
+        <p>
+          Collect URLs from crawlers and historical sources to find old APIs, forgotten pages,
+          and hidden parameters.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>katana</li>
+          <li>gau</li>
+          <li>waybackurls</li>
+          <li>hakrawler</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>gau example.com | sort -u</code></pre>
+
+        <h4>Output</h4>
+        <p>A large list of URLs and endpoints from current and historical sources.</p>
+
+        <h4>Tips</h4>
+        <p>Remove static assets like images, fonts, and CSS to keep only useful URLs.</p>
+      </section>
+
+      <section class="phase-card">
+        <h3>Phase 7 — JavaScript & Secrets Analysis</h3>
+        <p>
+          Analyze JavaScript files for hidden endpoints, API keys, tokens, and internal references
+          that are not visible in the page source.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>SecretFinder</li>
+          <li>jsluice</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>cat js_files.txt | xargs -I@ curl -s @ | jsluice urls</code></pre>
+
+        <h4>Output</h4>
+        <p>Secret patterns, URLs, endpoints, and sensitive strings from JavaScript files.</p>
+
+        <h4>Tips</h4>
+        <p>Always review minified JS files because they often hide useful strings.</p>
+      </section>
+
+      <section class="phase-card">
+        <h3>Phase 8 — Parameter Discovery</h3>
+        <p>
+          Find hidden GET, POST, JSON, and XML parameters. These are often the entry points
+          for IDOR, XSS, SQLi, and SSRF testing.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>Arjun</li>
+          <li>ParamSpider</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>arjun -u https://example.com/search</code></pre>
+
+        <h4>Output</h4>
+        <p>Discovered parameter names and request variants.</p>
+
+        <h4>Tips</h4>
+        <p>Test parameters on endpoints where user input is likely accepted.</p>
+      </section>
+
+      <section class="phase-card">
+        <h3>Phase 9 — Vulnerability Scanning</h3>
+        <p>
+          Use automated scanners to check for common issues, misconfigurations, and known CVEs
+          after recon is complete.
+        </p>
+
+        <h4>Recommended Tools</h4>
+        <ul>
+          <li>Nuclei</li>
+          <li>SQLMap</li>
+          <li>Dalfox</li>
+          <li>Nmap</li>
+          <li>Ghauri</li>
+        </ul>
+
+        <h4>Example Pipeline</h4>
+        <pre><code>nuclei -l live_hosts.txt -tags cve,misconfig -severity critical,high</code></pre>
+
+        <h4>Output</h4>
+        <p>Potential vulnerabilities, misconfigurations, and exposure findings.</p>
+
+        <h4>Tips</h4>
+        <p>Use scanners only after you have live hosts and useful endpoints.</p>
+      </section>
+
+      <a class="btn" href="../index.html">Back to Home</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+</body>
+</html>
