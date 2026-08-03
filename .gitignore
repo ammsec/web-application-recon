@@ -1,2 +1,35 @@
-node_modules/
+# OS junk
 .DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Node (in case any tooling gets added later)
+node_modules/
+npm-debug.log*
+
+# Python (in case any scripts get added later)
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Env files (never commit secrets/API keys)
+.env
+.env.local
+
+# Recon tool output (if you ever run tools inside this repo folder)
+recon_*/
+*.txt
+!requirements.txt
+subdomains.txt
+live_hosts.txt
+nuclei_results.txt
