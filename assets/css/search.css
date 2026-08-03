@@ -1,0 +1,43 @@
+/* ===========================================================
+   search.css
+   Styles for the search bar on index.html.
+   Add this block into content.css (or link this file after it).
+   =========================================================== */
+
+.search-wrap {
+  margin: 1.5rem 0 2rem;
+}
+
+.search-input {
+  width: 100%;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  color: #e2e8f0;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: #64748b;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+.result-count {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.no-results {
+  display: none;
+  color: #94a3b8;
+  padding: 1.5rem 0;
+  text-align: center;
+}

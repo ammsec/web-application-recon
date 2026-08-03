@@ -1,0 +1,134 @@
+/* ===========================================================
+   animations.css
+   Layering for the background canvas effect + small ambient
+   animations to complete the cybersecurity vibe.
+   =========================================================== */
+
+/* Canvas sits fixed behind everything, low opacity so it stays subtle */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+/* Lift real content above the canvas */
+body {
+  position: relative;
+}
+
+.header,
+main,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Slight translucency on the header so the rain reads through it faintly */
+.header {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.92), rgba(51, 65, 85, 0.92));
+  backdrop-filter: blur(2px);
+}
+
+/* Optional: soft pulsing glow on the accent color, used sparingly */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(56, 189, 248, 0); }
+  50%      { box-shadow: 0 0 12px rgba(56, 189, 248, 0.35); }
+}
+
+.btn {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Respect reduced motion preference — disable the glow pulse too */
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    animation: none;
+  }
+}
+
+/* ---- Faint background grid, sits above the canvas, below content ---- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ---- Scanline sweep — a single light band drifting down the page ---- */
+@keyframes scanline-sweep {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 120px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(56, 189, 248, 0) 0%,
+    rgba(56, 189, 248, 0.06) 50%,
+    rgba(56, 189, 248, 0) 100%
+  );
+  animation: scanline-sweep 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+    display: none;
+  }
+}
+
+/* ---- Terminal-style blinking cursor after the hero subtitle ---- */
+@keyframes blink-cursor {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.hero-subtitle::after {
+  content: "_";
+  display: inline-block;
+  margin-left: 2px;
+  color: #38bdf8;
+  animation: blink-cursor 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-subtitle::after {
+    animation: none;
+  }
+}
+
+/* ---- Phase card hover — subtle lift + glowing border ---- */
+.phase-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.phase-card:hover {
+  transform: translateY(-3px);
+  border-color: #38bdf8;
+  box-shadow: 0 4px 20px rgba(56, 189, 248, 0.15);
+}
+
+/* ---- Tool card hover — same treatment, quieter ---- */
+.tool-card {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-card:hover {
+  border-color: #475569;
+  box-shadow: 0 2px 12px rgba(56, 189, 248, 0.08);
+}

@@ -1,0 +1,141 @@
+/* ===========================================================
+   pipeline.css
+   Interactive connected pipeline builder — timeline nodes with
+   connecting lines, driven by a domain input.
+   Append this into content.css.
+   =========================================================== */
+
+.pipeline-input-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.5rem 0 3rem;
+  flex-wrap: wrap;
+}
+
+.pipeline-input {
+  flex: 1;
+  min-width: 220px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  color: #e2e8f0;
+  font-size: 1rem;
+  font-family: "Fira Code", Consolas, monospace;
+}
+
+.pipeline-input::placeholder {
+  color: #64748b;
+}
+
+.pipeline-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+.pipeline-generate-btn {
+  background: #38bdf8;
+  color: #0f172a;
+  border: none;
+  border-radius: 10px;
+  padding: 0.85rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.pipeline-generate-btn:hover {
+  background: #7dd3fc;
+}
+
+/* ---- Timeline flow ---- */
+.pipeline-flow {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.pipeline-flow::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, #38bdf8, #334155);
+}
+
+.pipeline-step {
+  position: relative;
+  margin-bottom: 1.75rem;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: step-appear 0.4s ease forwards;
+}
+
+@keyframes step-appear {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pipeline-step::before {
+  content: attr(data-step);
+  position: absolute;
+  left: -2.5rem;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 2px solid #38bdf8;
+  color: #7dd3fc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.pipeline-step-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+}
+
+.pipeline-step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.pipeline-step-title {
+  color: #7dd3fc;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.pipeline-step-link {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  text-decoration: none;
+}
+
+.pipeline-step-link:hover {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
+.pipeline-step-desc {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-bottom: 0.6rem;
+}
+
+.pipeline-placeholder {
+  color: #64748b;
+  text-align: center;
+  padding: 3rem 0;
+  border: 1px dashed #334155;
+  border-radius: 12px;
+}

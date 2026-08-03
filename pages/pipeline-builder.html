@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pipeline Builder | Web Application Recon</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/content.css" />
+  <link rel="stylesheet" href="../assets/css/pipeline.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Web Application Recon</h1>
+      <p class="hero-subtitle">A Practical Guide to Modern Web Application Reconnaissance</p>
+      <p class="hero-author">Built with ❤️ by <strong>ammsec</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="../index.html" class="back-link">← Back to all phases</a>
+
+    <h2 class="page-title">Pipeline Builder</h2>
+    <p class="page-subtitle">
+      Type a domain, hit generate, and get the full 9-phase recon
+      pipeline built for that exact target — every command ready to
+      copy, in order, start to end.
+    </p>
+
+    <div class="pipeline-input-bar">
+      <input
+        type="text"
+        id="domain-input"
+        class="pipeline-input"
+        placeholder="example.com"
+      />
+      <button id="generate-btn" class="pipeline-generate-btn">Generate Pipeline →</button>
+    </div>
+
+    <div id="pipeline-output">
+      <p class="pipeline-placeholder">Enter a domain above to build its pipeline.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Made for learning recon workflow.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/background.js"></script>
+  <script>
+    const PIPELINE_STEPS = [
+      {
+        title: "Passive Recon",
+        page: "passive-recon.html",
+        desc: "Pull public info with zero contact to the target.",
+        cmd: (d) => `whois ${d}`
+      },
+      {
+        title: "Subdomain Enumeration",
+        page: "subdomain-enumeration.html",
+        desc: "Find every subdomain, passive first.",
+        cmd: (d) => `subfinder -d ${d} -all -silent -o subdomains.txt`
+      },
+      {
+        title: "DNS Resolution",
+        page: "dns-enumeration.html",
+        desc: "Resolve and validate what Subfinder found.",
+        cmd: (d) => `cat subdomains.txt | dnsx -silent -o resolved.txt`
+      },
+      {
+        title: "Alive Hosts",
+        page: "alive-hosts.html",
+        desc: "Confirm which resolved hosts are actually live.",
+        cmd: (d) => `cat resolved.txt | httpx -title -status-code -tech-detect -o live_hosts.txt`
+      },
+      {
+        title: "Port Scanning",
+        page: "port-scanning.html",
+        desc: "Check for open ports beyond just the web server.",
+        cmd: (d) => `nmap -sC -sV -p 80,443,8080,8443,3000,5000 ${d} -oN nmap_results.txt`
+      },
+      {
+        title: "Technology Detection",
+        page: "technology-detection.html",
+        desc: "Fingerprint the stack on every live host.",
+        cmd: (d) => `whatweb -i live_hosts.txt --log-brief=tech_results.txt`
+      },
+      {
+        title: "Directory Enumeration",
+        page: "directory-enumeration.html",
+        desc: "Brute force hidden files and paths.",
+        cmd: (d) => `ffuf -u https://${d}/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt -e .php,.html,.bak -fc 404`
+      },
+      {
+        title: "URL Discovery",
+        page: "url-discovery.html",
+        desc: "Collect live and historical URLs from every source.",
+        cmd: (d) => `echo ${d} | waybackurls > urls.txt; gau ${d} >> urls.txt; katana -u https://${d} -jc >> urls.txt; sort -u urls.txt -o cleaned_urls.txt`
+      },
+      {
+        title: "JavaScript & Secrets",
+        page: "javascript-analysis.html",
+        desc: "Pull hardcoded keys and endpoints out of JS files.",
+        cmd: (d) => `cat cleaned_urls.txt | grep "\\.js$" | xargs -I@ curl -s @ | jsluice secrets`
+      },
+      {
+        title: "Parameter Discovery",
+        page: "parameter-discovery.html",
+        desc: "Find hidden GET/POST/JSON parameters.",
+        cmd: (d) => `arjun -i cleaned_urls.txt -oB`
+      },
+      {
+        title: "Vulnerability Scanning",
+        page: "checklist.html",
+        desc: "Run automated scans against everything found.",
+        cmd: (d) => `nuclei -l live_hosts.txt -tags cve,misconfig -severity critical,high -o nuclei_results.txt`
+      }
+    ];
+
+    function sanitizeDomain(raw) {
+      return raw
+        .trim()
+        .replace(/^https?:\/\//i, "")
+        .replace(/\/.*$/, "")
+        .toLowerCase();
+    }
+
+    function renderPipeline(domain) {
+      const output = document.getElementById("pipeline-output");
+      const flow = document.createElement("div");
+      flow.className = "pipeline-flow";
+
+      PIPELINE_STEPS.forEach((step, i) => {
+        const el = document.createElement("div");
+        el.className = "pipeline-step";
+        el.setAttribute("data-step", i + 1);
+        el.style.animationDelay = `${i * 0.08}s`;
+
+        el.innerHTML = `
+          <div class="pipeline-step-card">
+            <div class="pipeline-step-header">
+              <span class="pipeline-step-title">${step.title}</span>
+              <a class="pipeline-step-link" href="${step.page}">Details →</a>
+            </div>
+            <p class="pipeline-step-desc">${step.desc}</p>
+            <div class="code-wrapper">
+              <pre class="code-block"><code>${step.cmd(domain)}</code></pre>
+              <button class="copy-btn">Copy</button>
+            </div>
+          </div>
+        `;
+        flow.appendChild(el);
+      });
+
+      output.innerHTML = "";
+      output.appendChild(flow);
+
+      // Re-wire copy buttons for the freshly injected nodes
+      if (typeof attachCopyButtons === "function") {
+        attachCopyButtons();
+      }
+    }
+
+    function handleGenerate() {
+      const input = document.getElementById("domain-input");
+      const domain = sanitizeDomain(input.value || "");
+      if (!domain) {
+        input.focus();
+        return;
+      }
+      renderPipeline(domain);
+    }
+
+    document.getElementById("generate-btn").addEventListener("click", handleGenerate);
+    document.getElementById("domain-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleGenerate();
+    });
+  </script>
+</body>
+</html>
